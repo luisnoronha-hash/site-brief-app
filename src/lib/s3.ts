@@ -9,6 +9,16 @@ import { randomUUID } from "crypto";
 
 const bucket = process.env.S3_BUCKET ?? "";
 
+/**
+ * Whether object storage can actually be reached. Without a bucket and
+ * credentials every upload fails deep inside the AWS SDK, and the browser only
+ * ever sees "upload failed" — so the person retries forever instead of being
+ * told the feature isn't configured yet.
+ */
+export function isStorageConfigured(): boolean {
+  return Boolean(bucket && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY);
+}
+
 export const s3Client = new S3Client({
   region: process.env.S3_REGION ?? "us-east-1",
   endpoint: process.env.S3_ENDPOINT || undefined,
