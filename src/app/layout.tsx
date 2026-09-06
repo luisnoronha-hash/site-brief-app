@@ -3,7 +3,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "LANA Development Portal — Development Potential Analysis for Agents",
+  title: "Site Brief — Development Potential Analysis for Agents",
   description:
     "Order a branded, expert development-potential analysis for any Florida land or teardown listing.",
 };

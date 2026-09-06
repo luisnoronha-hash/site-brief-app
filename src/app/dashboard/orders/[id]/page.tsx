@@ -102,7 +102,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
           </>
         ) : (
           <p className="text-sm text-navy-600">
-            Your development-potential analysis is being prepared by a LANA Development expert. We&rsquo;ll
+            Your development-potential analysis is being prepared by a Site Brief expert. We&rsquo;ll
             email you as soon as it&rsquo;s ready — no automated report will appear here in the meantime.
           </p>
         )}

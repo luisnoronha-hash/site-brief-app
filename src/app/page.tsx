@@ -74,8 +74,8 @@ export default function HomePage() {
         <section className="border-b border-sand-400 bg-white">
           <div className="container-content py-16">
             <p className="mx-auto max-w-2xl text-center font-serif text-xl italic text-navy-600">
-              &ldquo;This is not an instant report generator. Every analysis is prepared by a LANA
-              Development expert — that is what makes it worth presenting to your client.&rdquo;
+              &ldquo;This is not an instant report generator. Every analysis is prepared by a Site
+              Brief expert — that is what makes it worth presenting to your client.&rdquo;
             </p>
           </div>
         </section>
@@ -94,7 +94,7 @@ export default function HomePage() {
                 {
                   step: "02",
                   title: "We prepare the analysis",
-                  body: "A LANA Development expert reviews zoning, overlays, and market data for the site. Standard turnaround is 48 hours; rush is 24.",
+                  body: "A Site Brief expert reviews zoning, overlays, and market data for the site. Standard turnaround is 48 hours; rush is 24.",
                 },
                 {
                   step: "03",

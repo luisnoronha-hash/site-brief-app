@@ -5,7 +5,7 @@ export function SiteHeader() {
     <header className="border-b border-sand-400 bg-sand-100">
       <div className="container-content flex h-20 items-center justify-between">
         <Link href="/" className="font-serif text-xl font-semibold tracking-wide text-navy">
-          LANA <span className="font-sans text-xs font-medium uppercase tracking-[0.2em] text-graystone">Development</span>
+          Site <span className="font-sans text-xs font-medium uppercase tracking-[0.2em] text-graystone">Brief</span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm text-navy-700 md:flex">
           <Link href="/#how-it-works" className="hover:text-navy">

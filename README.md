@@ -1,8 +1,9 @@
-# LANA Development Portal
+# Site Brief
 
-A web application for LANA Development, a South Florida residential developer. Residential real
-estate agents submit a property address; LANA's team prepares a professional development-potential
-analysis; the agent receives it as a branded PDF carrying their own name, license, and brokerage.
+A web application built for LANA Development, a South Florida residential developer. Residential
+real estate agents submit a property address; LANA's team prepares a professional development-
+potential analysis; the agent receives it as a branded PDF carrying their own name, license, and
+brokerage.
 
 **This is an intake, payment, tracking, and delivery portal with an internal fulfillment queue — not
 an automated zoning-calculation engine.** Every analysis is prepared by a human LANA Development
@@ -31,7 +32,7 @@ npm run dev
 ```
 
 The seed script creates default pricing settings and an admin user (`ADMIN_EMAIL`, defaulting to
-`admin@lanadevelopment.com`) with a temporary password of `changeme123`. **Change this password
+`admin@site-brief.com`) with a temporary password of `changeme123`. **Change this password
 immediately** after first sign-in.
 
 ## Environment variables

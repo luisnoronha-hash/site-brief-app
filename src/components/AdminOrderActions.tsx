@@ -105,7 +105,7 @@ export function AdminOrderActions({ orderId, userId, currentStatus, hasPaymentIn
       <div className="card">
         <p className="label-field">Upload finished report</p>
         <p className="mt-1 text-xs text-graystone">
-          Upload the analysis PDF — LANA will merge it with the agent&rsquo;s branded cover, header/footer,
+          Upload the analysis PDF — Site Brief will merge it with the agent&rsquo;s branded cover, header/footer,
           and disclaimer page, then mark the order delivered and email the agent.
         </p>
         <form onSubmit={uploadDeliverable} className="mt-3 flex flex-col items-start gap-3">

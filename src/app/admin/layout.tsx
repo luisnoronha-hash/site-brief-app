@@ -10,7 +10,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="border-b border-sand-400 bg-navy text-sand-100">
         <div className="container-content flex h-16 items-center justify-between">
           <Link href="/admin" className="font-serif text-lg">
-            LANA <span className="font-sans text-xs uppercase tracking-[0.2em] text-sand-300">Admin</span>
+            Site Brief <span className="font-sans text-xs uppercase tracking-[0.2em] text-sand-300">Admin</span>
           </Link>
           <nav className="flex items-center gap-6 text-sm">
             <Link href="/admin" className="hover:text-sand-300">

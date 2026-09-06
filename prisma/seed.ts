@@ -13,7 +13,7 @@ async function main() {
     });
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL ?? "admin@lanadevelopment.com";
+  const adminEmail = process.env.ADMIN_EMAIL ?? "admin@site-brief.com";
   const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
   if (!existingAdmin) {
     const passwordHash = await bcrypt.hash("changeme123", 12);
