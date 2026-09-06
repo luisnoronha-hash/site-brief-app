@@ -26,18 +26,26 @@ import { spawnSync } from "node:child_process";
  * Only migrations and the seed use this. The app itself keeps the pooled URL,
  * which is what you want for serverless request handling.
  */
-function firstSet(names) {
-  for (const name of names) {
-    if (process.env[name]) return { name, value: process.env[name] };
+/**
+ * The integrations prefix every variable they create with a user-chosen
+ * string, so the connection can arrive as `database_DATABASE_URL` rather than
+ * DATABASE_URL. The prefix is arbitrary — match on the suffix.
+ * Mirrors src/lib/database-url.ts, kept separate because this script is plain
+ * JS and runs before the app is built.
+ */
+function firstSet(suffixes) {
+  for (const suffix of suffixes) {
+    const names = process.env[suffix]
+      ? [suffix]
+      : Object.keys(process.env)
+          .filter((name) => name.endsWith(`_${suffix}`) && process.env[name])
+          .sort();
+    if (names.length > 0) return { name: names[0], value: process.env[names[0]] };
   }
   return null;
 }
 
-/**
- * Any connection to the database, under whichever name the provider chose.
- * Mirrors DATABASE_URL_VARIABLES in src/lib/database-url.ts — kept separate
- * because this script is plain JS and runs before the app is built.
- */
+/** Pooled first: correct for serving requests. */
 const ANY_DATABASE_URL = [
   "DATABASE_URL",
   "POSTGRES_PRISMA_URL",
@@ -79,7 +87,7 @@ if (!pooled) {
 
   process.stdout.write(
     "\n⚠ No database connection string found — skipping migrations and seed.\n" +
-      `  Looked for: ${ANY_DATABASE_URL.join(", ")}\n` +
+      `  Looked for (with or without a prefix): ${ANY_DATABASE_URL.join(", ")}\n` +
       (candidates.length > 0
         ? `  Variables present that look related: ${candidates.join(", ")}\n`
         : "  No database-looking variables are set on this deployment at all.\n") +
