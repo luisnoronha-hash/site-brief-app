@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { brokerProfileSchema } from "@/lib/validations";
-import { getObjectBuffer, deleteObject } from "@/lib/s3";
+import { getObjectBuffer, deleteObject } from "@/lib/storage";
 import { readImageDimensions } from "@/lib/image-dimensions";
 
 const MIN_HEADSHOT_SIZE = 600;
