@@ -6,8 +6,12 @@
  * prerendered page with `TypeError: Invalid URL` and a stack trace that never
  * names the variable — an opaque failure for a one-character mistake.
  *
- * Repair the unambiguous cases here, before Next starts, and otherwise fail
- * with a message that says which variable is wrong and what it contains.
+ * Repair the unambiguous cases here, before Next starts. A value that still
+ * cannot be parsed is dropped with a warning naming it, never thrown on:
+ * failing the build takes the whole site down over one environment variable,
+ * whereas dropping it lets NextAuth fall back to the request's own host and
+ * keeps the site serving. Mirrors src/lib/env.ts, which does the same at
+ * runtime (this file is CommonJS and cannot import it).
  */
 const URL_VARIABLES = ["NEXTAUTH_URL", "NEXT_PUBLIC_APP_URL"];
 
@@ -26,11 +30,12 @@ function sanitizeUrlVariable(name) {
     // eslint-disable-next-line no-new
     new URL(cleaned);
   } catch {
-    throw new Error(
-      `${name} is not a valid URL: ${JSON.stringify(raw)}. ` +
-        `Expected something like "https://site-brief.com". Fix it in the ` +
-        `project's environment variables and redeploy.`
+    console.warn(
+      `[env] ${name} is not a valid URL: ${JSON.stringify(raw)} — ignoring it. ` +
+        `Expected something like "https://site-brief.com" (the scheme is required).`
     );
+    delete process.env[name];
+    return;
   }
 
   if (cleaned !== raw) {
