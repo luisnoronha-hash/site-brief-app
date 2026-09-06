@@ -26,19 +26,40 @@ import { spawnSync } from "node:child_process";
  * Only migrations and the seed use this. The app itself keeps the pooled URL,
  * which is what you want for serverless request handling.
  */
-function directDatabaseUrl() {
-  return (
-    process.env.DIRECT_DATABASE_URL ||
-    process.env.DATABASE_URL_UNPOOLED ||
-    process.env.DATABASE_URL_NON_POOLING ||
-    process.env.POSTGRES_URL_NON_POOLING ||
-    process.env.DATABASE_URL
-  );
+function firstSet(names) {
+  for (const name of names) {
+    if (process.env[name]) return { name, value: process.env[name] };
+  }
+  return null;
 }
 
-function run(label, command, args) {
+/**
+ * Any connection to the database, under whichever name the provider chose.
+ * Mirrors DATABASE_URL_VARIABLES in src/lib/database-url.ts — kept separate
+ * because this script is plain JS and runs before the app is built.
+ */
+const ANY_DATABASE_URL = [
+  "DATABASE_URL",
+  "POSTGRES_PRISMA_URL",
+  "POSTGRES_URL",
+  "STORAGE_URL",
+  "DATABASE_URL_UNPOOLED",
+  "DATABASE_URL_NON_POOLING",
+  "POSTGRES_URL_NON_POOLING",
+];
+
+/** Non-pooled first: migrations cannot run through a connection pooler. */
+const DIRECT_DATABASE_URL = [
+  "DIRECT_DATABASE_URL",
+  "DATABASE_URL_UNPOOLED",
+  "DATABASE_URL_NON_POOLING",
+  "POSTGRES_URL_NON_POOLING",
+  ...ANY_DATABASE_URL,
+];
+
+function run(label, command, args, databaseUrl) {
   process.stdout.write(`\n▸ ${label}\n`);
-  const env = { ...process.env, DATABASE_URL: directDatabaseUrl() };
+  const env = { ...process.env, DATABASE_URL: databaseUrl };
   const result = spawnSync(command, args, { stdio: "inherit", env });
   if (result.status !== 0) {
     process.stderr.write(`\n✗ ${label} failed (exit ${result.status ?? "signal"}).\n`);
@@ -46,21 +67,36 @@ function run(label, command, args) {
   }
 }
 
-if (!process.env.DATABASE_URL) {
+const pooled = firstSet(ANY_DATABASE_URL);
+
+if (!pooled) {
+  // Name the variables that DO exist, so a database attached under an
+  // unexpected name is obvious from the log instead of guesswork. Names only —
+  // a connection string carries credentials and must never reach a build log.
+  const candidates = Object.keys(process.env)
+    .filter((name) => /DATABASE|POSTGRES|_URL$/.test(name))
+    .sort();
+
   process.stdout.write(
-    "\n⚠ DATABASE_URL is not set — skipping migrations and seed.\n" +
+    "\n⚠ No database connection string found — skipping migrations and seed.\n" +
+      `  Looked for: ${ANY_DATABASE_URL.join(", ")}\n` +
+      (candidates.length > 0
+        ? `  Variables present that look related: ${candidates.join(", ")}\n`
+        : "  No database-looking variables are set on this deployment at all.\n") +
       "  The build will succeed and the marketing page will render, but sign-in,\n" +
       "  orders, and the admin queue will fail until a database is configured.\n"
   );
   process.exit(0);
 }
 
-if (directDatabaseUrl() !== process.env.DATABASE_URL) {
-  process.stdout.write("\nUsing the direct (non-pooled) connection for migrations.\n");
+const direct = firstSet(DIRECT_DATABASE_URL);
+process.stdout.write(`\nDatabase connection found in ${pooled.name}.\n`);
+if (direct.name !== pooled.name) {
+  process.stdout.write(`Using ${direct.name} (direct, non-pooled) for migrations.\n`);
 }
 
-run("prisma migrate deploy", "npx", ["prisma", "migrate", "deploy"]);
-run("seed defaults", "npx", ["tsx", "prisma/seed.ts"]);
+run("prisma migrate deploy", "npx", ["prisma", "migrate", "deploy"], direct.value);
+run("seed defaults", "npx", ["tsx", "prisma/seed.ts"], direct.value);
 
 const missing = ["NEXTAUTH_SECRET", "NEXTAUTH_URL"].filter((key) => !process.env[key]);
 if (missing.length > 0) {
