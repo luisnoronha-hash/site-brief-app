@@ -1,3 +1,5 @@
+// Must come first: it repairs NEXTAUTH_URL before NextAuth reads it.
+import "@/lib/env";
 import { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
