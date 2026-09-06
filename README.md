@@ -125,9 +125,9 @@ Designed for Vercel:
 - `npm audit` currently flags several Next.js 14.x advisories that are only fully resolved by
   upgrading to Next 15/16 (a breaking change involving `next-auth` v5 migration). Track this as a
   near-term hardening task before handling real payment/PII traffic at scale.
-- Broker headshot/logo uploads are stored as-is; server-side dimension/aspect-ratio validation
-  (min 600×600 square headshot, min 1000px-wide logo) is not yet enforced beyond the client-side
-  file picker `accept` hint.
+- Exact aspect-ratio enforcement (a truly square headshot crop) isn't implemented — there's no
+  cropping UI yet, so `/api/profile` only enforces the minimum pixel dimensions (600×600 headshot,
+  1000px-wide logo, via `src/lib/image-dimensions.ts`), not squareness.
 
 ## Out of scope (v1)
 

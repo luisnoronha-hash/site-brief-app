@@ -51,7 +51,7 @@ export function ProfileForm({ initial }: { initial: Profile }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError("Please check the fields below and try again.");
+        setError(typeof data.error === "string" ? data.error : "Please check the fields below and try again.");
         return;
       }
       setSaved(true);
