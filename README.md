@@ -60,11 +60,13 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 
 Copy the printed signing secret into `STRIPE_WEBHOOK_SECRET`.
 
-**Important Stripe Customer Portal configuration:** in the Stripe dashboard, configure the Customer
-Portal's subscription cancellation behavior to "at end of billing period," not immediately, to match
-the product's cancellation policy. The app also calls `subscriptions.update` with
-`cancel_at_period_end: true` directly from the billing page's "Cancel subscription" button, which
-enforces this regardless of the portal's own configuration.
+**Stripe Customer Portal configuration is automatic, not a manual dashboard step.** The Customer
+Portal's own default cancellation behavior is immediate, which doesn't match the product's policy.
+`src/lib/stripe.ts`'s `getOrCreatePortalConfiguration()` creates a Billing Portal configuration with
+`subscription_cancel.mode: "at_period_end"` on first use and caches its ID in `Setting`, so every
+portal session — however the customer reaches it — cancels at period end. The billing page's own
+"Cancel subscription" button also calls `subscriptions.update` with `cancel_at_period_end: true`
+directly, as a second, independent enforcement of the same policy.
 
 ## How entitlements work
 
