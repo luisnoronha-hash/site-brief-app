@@ -110,15 +110,27 @@ The merged PDF is stored in the private bucket and served to the agent via a tim
 
 ## Deployment
 
-Designed for Vercel:
+Designed for Vercel. `vercel.json` pins the framework preset and build command so the deployment
+doesn't depend on whatever Vercel auto-detected when the project was first imported.
 
 1. Provision a PostgreSQL database (Vercel Postgres, Neon, Supabase, RDS, etc).
 2. Set all environment variables from `.env.example` in the Vercel project.
-3. Run `npx prisma migrate deploy` against the production database (via a build step or manually).
-4. Point a Stripe webhook endpoint at `https://<your-domain>/api/stripe/webhook` for the events
+3. Point a Stripe webhook endpoint at `https://<your-domain>/api/stripe/webhook` for the events
    listed above.
-5. Configure the Google Cloud OAuth client's authorized redirect URI:
+4. Configure the Google Cloud OAuth client's authorized redirect URI:
    `https://<your-domain>/api/auth/callback/google`.
+
+**Migrations and seeding run automatically on deploy.** `scripts/deploy.mjs` runs before
+`next build` (wired up as the `vercel-build` script) and applies `prisma migrate deploy` followed by
+the seed, both of which are idempotent and safe on every deploy. If `DATABASE_URL` isn't set yet the
+script exits cleanly with a notice instead of failing the build — the static marketing page still
+deploys, while anything touching the database won't work until a database is configured.
+
+**The seeded admin password is never hardcoded outside development.** Set `ADMIN_PASSWORD` (12+
+characters) to choose it; leave it blank and a deployed environment generates a random one and prints
+it once in the build log. The `changeme123` default applies only when `NODE_ENV` isn't `production`.
+The password is only used the first time the admin account is created — changing the variable later
+does not reset it.
 
 ## Known follow-ups
 
