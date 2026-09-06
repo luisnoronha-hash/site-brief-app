@@ -1,8 +1,8 @@
 import type { Locale } from "@prisma/client";
+import { appUrl } from "@/lib/app-url";
 
 type Templated = { subject: string; body: string };
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 function wrap(locale: Locale, title: string, lines: string[]): string {
   const closing =
@@ -22,7 +22,7 @@ function wrap(locale: Locale, title: string, lines: string[]): string {
 }
 
 export function verificationEmail(locale: Locale, token: string): Templated {
-  const link = `${APP_URL}/verify?token=${token}`;
+  const link = `${appUrl()}/verify?token=${token}`;
   if (locale === "pt") {
     return {
       subject: "Confirme seu endereço de e-mail — Site Brief",
@@ -42,7 +42,7 @@ export function verificationEmail(locale: Locale, token: string): Templated {
 }
 
 export function passwordResetEmail(locale: Locale, token: string): Templated {
-  const link = `${APP_URL}/reset-password?token=${token}`;
+  const link = `${appUrl()}/reset-password?token=${token}`;
   if (locale === "pt") {
     return {
       subject: "Redefinir sua senha — Site Brief",
@@ -62,7 +62,7 @@ export function passwordResetEmail(locale: Locale, token: string): Templated {
 }
 
 export function orderReceivedEmail(locale: Locale, address: string): Templated {
-  const link = `${APP_URL}/dashboard`;
+  const link = `${appUrl()}/dashboard`;
   if (locale === "pt") {
     return {
       subject: `Recebemos seu pedido — ${address}`,
@@ -101,7 +101,7 @@ export function orderInProgressEmail(locale: Locale, address: string): Templated
 }
 
 export function reportDeliveredEmail(locale: Locale, address: string): Templated {
-  const link = `${APP_URL}/dashboard`;
+  const link = `${appUrl()}/dashboard`;
   if (locale === "pt") {
     return {
       subject: `Seu relatório está pronto — ${address}`,
@@ -134,7 +134,7 @@ export function paymentSucceededEmail(locale: Locale, amountLabel: string): Temp
 }
 
 export function paymentFailedEmail(locale: Locale): Templated {
-  const link = `${APP_URL}/dashboard/billing`;
+  const link = `${appUrl()}/dashboard/billing`;
   if (locale === "pt") {
     return {
       subject: "Falha no pagamento — Site Brief",
@@ -171,7 +171,7 @@ export function subscriptionCancelledEmail(locale: Locale): Templated {
 }
 
 export function freeAnalysesExhaustedEmail(locale: Locale): Templated {
-  const link = `${APP_URL}/dashboard/billing`;
+  const link = `${appUrl()}/dashboard/billing`;
   if (locale === "pt") {
     return {
       subject: "Suas análises gratuitas terminaram — Site Brief",
@@ -195,7 +195,7 @@ export function orderReceivedAdminNotice(address: string, agentEmail: string): T
     subject: `New order — ${address}`,
     body: wrap("en" as Locale, "New order submitted", [
       `${agentEmail} submitted a new order for <strong>${address}</strong>.`,
-      `<a href="${APP_URL}/admin" style="color:#1B2A41; font-weight:600;">Open admin queue</a>`,
+      `<a href="${appUrl()}/admin" style="color:#1B2A41; font-weight:600;">Open admin queue</a>`,
     ]),
   };
 }

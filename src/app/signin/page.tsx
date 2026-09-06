@@ -12,15 +12,22 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [resendState, setResendState] = useState<"idle" | "working" | "sent">("idle");
+  const [verifyUrl, setVerifyUrl] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setNeedsVerification(false);
+    setVerifyUrl(null);
+    setResendState("idle");
     setLoading(true);
     try {
       const res = await signIn("credentials", { email, password, redirect: false });
       if (res?.error === "EMAIL_NOT_VERIFIED") {
-        setError("Please verify your email before signing in. Check your inbox for the confirmation link.");
+        setError("This account still needs its email confirmed before you can sign in.");
+        setNeedsVerification(true);
         return;
       }
       if (res?.error) {
@@ -31,6 +38,28 @@ export default function SignInPage() {
       router.refresh();
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleResend() {
+    setResendState("working");
+    try {
+      const res = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(typeof data.error === "string" ? data.error : "Could not resend the link.");
+        setResendState("idle");
+        return;
+      }
+      setVerifyUrl(typeof data.verifyUrl === "string" ? data.verifyUrl : null);
+      setResendState("sent");
+    } catch {
+      setError("Could not resend the link.");
+      setResendState("idle");
     }
   }
 
@@ -77,6 +106,32 @@ export default function SignInPage() {
               />
             </div>
             {error && <p className="text-sm text-red-600">{error}</p>}
+            {needsVerification && resendState !== "sent" && (
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={resendState === "working"}
+                className="text-sm text-navy underline"
+              >
+                {resendState === "working" ? "Sending…" : "Send me the confirmation link again"}
+              </button>
+            )}
+            {resendState === "sent" &&
+              (verifyUrl ? (
+                <div className="rounded border border-sand-400 bg-sand-100 p-3 text-sm">
+                  <p className="text-navy-600">
+                    Email delivery isn&rsquo;t configured on this environment yet, so here is the
+                    confirmation link directly:
+                  </p>
+                  <a href={verifyUrl} className="mt-2 inline-block font-medium text-navy underline">
+                    Confirm email
+                  </a>
+                </div>
+              ) : (
+                <p className="text-sm text-emerald-700">
+                  Sent — check your inbox for the confirmation link.
+                </p>
+              ))}
             <button type="submit" disabled={loading} className="btn-primary w-full">
               {loading ? "Signing in…" : "Sign in"}
             </button>
