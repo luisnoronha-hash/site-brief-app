@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  agent
+  admin
+}
+
+enum Locale {
+  en
+  pt
+}
+
+enum PropertyType {
+  vacant_land
+  teardown_single_family
+  small_multifamily
+  other
+}
+
+enum Relationship {
+  has_listing
+  competing_for_listing
+  representing_buyer
+}
+
+enum DeadlineTier {
+  standard_48h
+  rush_24h
+}
+
+enum OrderStatus {
+  submitted
+  in_progress
+  delivered
+  on_hold
+  cancelled
+}
+
+enum PaymentMethod {
+  free
+  subscription
+  one_off
+}
+
+enum FileKind {
+  upload
+  deliverable
+}
+
+enum SubscriptionStatus {
+  incomplete
+  incomplete_expired
+  trialing
+  active
+  past_due
+  canceled
+  unpaid
+  paused
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  passwordHash    String?
+  role            Role      @default(agent)
+  emailVerified   DateTime?
+  locale          Locale    @default(en)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  googleId        String?   @unique
+
+  brokerProfile   BrokerProfile?
+  orders          Order[]
+  subscription    Subscription?
+  verificationTokens VerificationToken[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+model BrokerProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fullName       String
+  licenseNumber  String
+  brokerage      String
+  officeAddress  String
+  phone          String
+  email          String
+
+  website        String?
+  headshotKey    String?
+  logoKey        String?
+  reportLanguage Locale   @default(en)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([licenseNumber])
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  address         String
+  placeId         String?
+  propertyType    PropertyType
+  askingPrice     Int
+  relationship    Relationship
+  deadlineTier    DeadlineTier
+
+  mlsNumber       String?
+  folio           String?
+  notes           String?
+
+  status          OrderStatus   @default(submitted)
+  priceCents      Int
+  paymentMethod   PaymentMethod
+  stripePaymentIntentId String?
+  stripeCheckoutSessionId String?
+
+  submittedAt     DateTime      @default(now())
+  deliveredAt     DateTime?
+
+  files           OrderFile[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderFile {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  key       String
+  filename  String
+  kind      FileKind
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+}
+
+model Subscription {
+  id                    String              @id @default(cuid())
+  userId                String              @unique
+  user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  stripeCustomerId      String              @unique
+  stripeSubscriptionId  String?             @unique
+  status                SubscriptionStatus  @default(incomplete)
+
+  currentPeriodStart    DateTime?
+  currentPeriodEnd      DateTime?
+  allowanceUsed         Int                 @default(0)
+  cancelAtPeriodEnd     Boolean             @default(false)
+
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

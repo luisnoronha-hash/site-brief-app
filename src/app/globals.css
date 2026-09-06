@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&family=Poppins:wght@700;800&display=swap");
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-sand-100 text-navy-800 font-sans antialiased;
+}
+
+.font-serif {
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+::selection {
+  background-color: #1b2a41;
+  color: #f6f4ef;
+}
+
+.container-content {
+  @apply mx-auto w-full max-w-content px-6;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-none border border-navy bg-navy px-6 py-3 text-sm font-medium tracking-wide text-sand-100 transition-colors hover:bg-navy-600;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-none border border-navy px-6 py-3 text-sm font-medium tracking-wide text-navy transition-colors hover:bg-navy hover:text-sand-100;
+}
+
+.input-field {
+  @apply w-full rounded-none border border-sand-400 bg-white px-4 py-2.5 text-sm text-navy-800 placeholder:text-graystone-light focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy;
+}
+
+.label-field {
+  @apply mb-1.5 block text-xs font-medium uppercase tracking-wide text-graystone;
+}
+
+.card {
+  @apply border border-sand-400 bg-white p-6;
+}
