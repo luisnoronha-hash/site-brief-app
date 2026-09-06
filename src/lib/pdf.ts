@@ -21,7 +21,7 @@ const DISCLAIMER_TEXT = (brokerage: string) =>
   `This analysis presents by-right and overlay development potential based on published zoning ` +
   `regulations and publicly available market data. It is not an appraisal, a survey, an engineering ` +
   `opinion, or a guarantee of any permitting outcome. Figures are estimates prepared for marketing ` +
-  `purposes and should be independently verified. Prepared by LANA Development as marketing support ` +
+  `purposes and should be independently verified. Prepared by Site Brief as marketing support ` +
   `for ${brokerage}.`;
 
 function wrapText(text: string, font: PDFFont, size: number, maxWidth: number): string[] {
@@ -159,7 +159,7 @@ export async function generateBrandedReport(input: ReportBrandingInput): Promise
       color: rgb(0.9, 0.89, 0.87),
     });
 
-    const footerText = "Development analysis by LANA Development · lanadevelopment.com";
+    const footerText = "Development analysis by Site Brief · site-brief.com";
     const footerWidth = helvetica.widthOfTextAtSize(footerText, 8);
     page.drawText(footerText, {
       x: (width - footerWidth) / 2,
@@ -218,7 +218,7 @@ export async function generateBrandedReport(input: ReportBrandingInput): Promise
     discY -= 15;
   }
 
-  const footerText = "Development analysis by LANA Development · lanadevelopment.com";
+  const footerText = "Development analysis by Site Brief · site-brief.com";
   const footerWidth = helvetica.widthOfTextAtSize(footerText, 8);
   finalPage.drawText(footerText, {
     x: (PAGE_WIDTH - footerWidth) / 2,

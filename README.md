@@ -1,14 +1,14 @@
 # Site Brief
 
-A web application built for LANA Development, a South Florida residential developer. Residential
-real estate agents submit a property address; LANA's team prepares a professional development-
-potential analysis; the agent receives it as a branded PDF carrying their own name, license, and
-brokerage.
+A web application for Site Brief, a South Florida development-potential analysis service. Residential
+real estate agents submit a property address; Site Brief's own team of analysts prepares a
+professional development-potential analysis; the agent receives it as a branded PDF carrying their
+own name, license, and brokerage.
 
 **This is an intake, payment, tracking, and delivery portal with an internal fulfillment queue — not
-an automated zoning-calculation engine.** Every analysis is prepared by a human LANA Development
-expert. The application generates the branded cover, running header/footer, and closing disclaimer
-page, then merges them with the analysis PDF an admin uploads.
+an automated zoning-calculation engine.** Every analysis is prepared by a human Site Brief analyst.
+The application generates the branded cover, running header/footer, and closing disclaimer page,
+then merges them with the analysis PDF an admin uploads.
 
 ## Stack
 
@@ -101,7 +101,7 @@ Admins upload the finished analysis PDF from `/admin/orders/[id]`. The server
 
 1. Builds a branded cover page (address, agent headshot, name, license, brokerage, brokerage logo).
 2. Merges in every page of the uploaded analysis, overlaying a running header (agent name/brokerage,
-   property address) and footer (`Development analysis by LANA Development · lanadevelopment.com`).
+   property address) and footer (`Development analysis by Site Brief · site-brief.com`).
 3. Appends a closing page with the agent's contact block and the required disclaimer text.
 
 The merged PDF is stored in the private bucket and served to the agent via a time-limited signed URL.
