@@ -16,9 +16,30 @@
  */
 import { spawnSync } from "node:child_process";
 
+/**
+ * Managed Postgres (Neon, Supabase, and friends) hands out a *pooled*
+ * connection string, and Prisma cannot run migrations through a connection
+ * pooler — it needs a direct session. Those providers expose the direct
+ * connection under a second variable whose name varies, so try the known ones
+ * and fall back to DATABASE_URL, which is correct for a plain Postgres.
+ *
+ * Only migrations and the seed use this. The app itself keeps the pooled URL,
+ * which is what you want for serverless request handling.
+ */
+function directDatabaseUrl() {
+  return (
+    process.env.DIRECT_DATABASE_URL ||
+    process.env.DATABASE_URL_UNPOOLED ||
+    process.env.DATABASE_URL_NON_POOLING ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.DATABASE_URL
+  );
+}
+
 function run(label, command, args) {
   process.stdout.write(`\n▸ ${label}\n`);
-  const result = spawnSync(command, args, { stdio: "inherit", env: process.env });
+  const env = { ...process.env, DATABASE_URL: directDatabaseUrl() };
+  const result = spawnSync(command, args, { stdio: "inherit", env });
   if (result.status !== 0) {
     process.stderr.write(`\n✗ ${label} failed (exit ${result.status ?? "signal"}).\n`);
     process.exit(result.status ?? 1);
@@ -32,6 +53,10 @@ if (!process.env.DATABASE_URL) {
       "  orders, and the admin queue will fail until a database is configured.\n"
   );
   process.exit(0);
+}
+
+if (directDatabaseUrl() !== process.env.DATABASE_URL) {
+  process.stdout.write("\nUsing the direct (non-pooled) connection for migrations.\n");
 }
 
 run("prisma migrate deploy", "npx", ["prisma", "migrate", "deploy"]);
