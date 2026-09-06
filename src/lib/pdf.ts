@@ -14,6 +14,7 @@ export type ReportBrandingInput = {
   brokerageWebsite?: string | null;
   headshotBytes?: Buffer | null;
   logoBytes?: Buffer | null;
+  preparedAt?: Date;
   analysisPdfBytes: Buffer;
 };
 
@@ -41,6 +42,20 @@ function wrapText(text: string, font: PDFFont, size: number, maxWidth: number): 
   return lines;
 }
 
+/**
+ * Largest size that fits inside boxWidth x boxHeight without distorting.
+ * Brokerage logos arrive in every shape — wide wordmarks, tall stacked marks,
+ * squares — so a fixed width squashes most of them.
+ */
+function fitInside(
+  natural: { width: number; height: number },
+  boxWidth: number,
+  boxHeight: number
+) {
+  const scale = Math.min(boxWidth / natural.width, boxHeight / natural.height);
+  return { width: natural.width * scale, height: natural.height * scale };
+}
+
 async function embedImageSmart(doc: PDFDocument, bytes: Buffer) {
   try {
     return await doc.embedPng(bytes);
@@ -64,32 +79,38 @@ export async function generateBrandedReport(input: ReportBrandingInput): Promise
   cover.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: rgb(1, 1, 1) });
   cover.drawRectangle({ x: 0, y: PAGE_HEIGHT - 12, width: PAGE_WIDTH, height: 12, color: NAVY });
 
+  // Logo sits on the same left margin as everything else, scaled to fit a box
+  // rather than to a fixed width, and bottom-aligned so marks of different
+  // heights all sit on one baseline.
+  const LOGO_BOX = { x: 60, baseline: PAGE_HEIGHT - 130, width: 190, height: 90 };
   if (input.logoBytes) {
     try {
       const logo = await embedImageSmart(outDoc, input.logoBytes);
-      const logoWidth = 140;
-      const logoHeight = (logo.height / logo.width) * logoWidth;
+      const size = fitInside(logo, LOGO_BOX.width, LOGO_BOX.height);
       cover.drawImage(logo, {
-        x: (PAGE_WIDTH - logoWidth) / 2,
-        y: PAGE_HEIGHT - 120 - logoHeight,
-        width: logoWidth,
-        height: logoHeight,
+        x: LOGO_BOX.x,
+        y: LOGO_BOX.baseline,
+        width: size.width,
+        height: size.height,
       });
     } catch {
       // logo failed to embed; continue without it
     }
   }
 
+  // The title block sits near the optical centre. Previously it hugged the top
+  // while the agent block hugged the bottom, leaving a third of the page blank
+  // in between and reading as unfinished rather than spacious.
   cover.drawText("DEVELOPMENT POTENTIAL ANALYSIS", {
     x: 60,
-    y: PAGE_HEIGHT - 220,
+    y: 470,
     size: 12,
     font: helveticaBold,
     color: GRAY,
   });
 
   const addressLines = wrapText(input.address, timesBold, 26, PAGE_WIDTH - 120);
-  let addrY = PAGE_HEIGHT - 260;
+  let addrY = 430;
   for (const line of addressLines) {
     cover.drawText(line, { x: 60, y: addrY, size: 26, font: timesBold, color: NAVY });
     addrY -= 32;
@@ -102,19 +123,41 @@ export async function generateBrandedReport(input: ReportBrandingInput): Promise
     color: rgb(0.9, 0.89, 0.87),
   });
 
-  // Agent block near the bottom of the cover
-  let agentY = 200;
+  const prepared = (input.preparedAt ?? new Date()).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  cover.drawText(`Prepared ${prepared}`, {
+    x: 60,
+    y: addrY - 34,
+    size: 10,
+    font: helvetica,
+    color: LIGHT_GRAY,
+  });
+
+  // Agent block: attribution at the foot of the cover, closer in now that the
+  // title block has come down to meet it.
+  const agentY = 150;
   if (input.headshotBytes) {
     try {
       const headshot = await embedImageSmart(outDoc, input.headshotBytes);
-      const size = 72;
-      cover.drawImage(headshot, { x: 60, y: agentY - size + 40, width: size, height: size });
+      const BOX = 76;
+      // Fit rather than force to a square: the profile form only enforces a
+      // minimum size, so a non-square headshot would otherwise be stretched.
+      const size = fitInside(headshot, BOX, BOX);
+      cover.drawImage(headshot, {
+        x: 60 + (BOX - size.width) / 2,
+        y: agentY - size.height / 2,
+        width: size.width,
+        height: size.height,
+      });
     } catch {
       // headshot failed to embed; continue without it
     }
   }
 
-  const textX = input.headshotBytes ? 150 : 60;
+  const textX = input.headshotBytes ? 156 : 60;
   cover.drawText(input.agentName, { x: textX, y: agentY + 26, size: 15, font: helveticaBold, color: NAVY });
   cover.drawText(`FL License #${input.licenseNumber}`, {
     x: textX,
