@@ -89,7 +89,7 @@ export function OrderForm() {
             required
             type="number"
             min={1}
-            step={1000}
+            step={1}
             className="input-field"
             placeholder="750000"
             value={askingPrice}

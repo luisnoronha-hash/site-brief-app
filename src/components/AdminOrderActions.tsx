@@ -108,8 +108,8 @@ export function AdminOrderActions({ orderId, userId, currentStatus, hasPaymentIn
           Upload the analysis PDF — LANA will merge it with the agent&rsquo;s branded cover, header/footer,
           and disclaimer page, then mark the order delivered and email the agent.
         </p>
-        <form onSubmit={uploadDeliverable} className="mt-3 flex items-center gap-3">
-          <input ref={fileRef} type="file" accept="application/pdf" className="text-sm" />
+        <form onSubmit={uploadDeliverable} className="mt-3 flex flex-col items-start gap-3">
+          <input ref={fileRef} type="file" accept="application/pdf" className="w-full text-sm" />
           <button type="submit" disabled={busy} className="btn-primary text-xs">
             Upload &amp; deliver
           </button>

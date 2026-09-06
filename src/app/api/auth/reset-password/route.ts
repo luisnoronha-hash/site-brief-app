@@ -14,8 +14,15 @@ export async function POST(req: Request) {
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
-  await prisma.user.update({ where: { id: record.userId }, data: { passwordHash } });
-  await prisma.passwordResetToken.delete({ where: { token } });
+
+  // Claim the token and update the password in one transaction: if two requests race
+  // on the same token, the loser's deleteMany affects zero rows, and Postgres
+  // read-committed guarantees that by then the winner's transaction has committed.
+  await prisma.$transaction(async (tx) => {
+    const deleted = await tx.passwordResetToken.deleteMany({ where: { token } });
+    if (deleted.count === 0) return;
+    await tx.user.update({ where: { id: record.userId }, data: { passwordHash } });
+  });
 
   return NextResponse.json({ ok: true });
 }

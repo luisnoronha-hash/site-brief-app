@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getDownloadUrl } from "@/lib/s3";
 import {
   formatCents,
+  formatDollars,
   formatDate,
   PROPERTY_TYPE_LABELS,
   RELATIONSHIP_LABELS,
@@ -42,7 +43,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
           </div>
           <div>
             <p className="label-field">Asking price</p>
-            <p className="text-navy-800">{formatCents(order.askingPrice)}</p>
+            <p className="text-navy-800">{formatDollars(order.askingPrice)}</p>
           </div>
           <div>
             <p className="label-field">Relationship</p>

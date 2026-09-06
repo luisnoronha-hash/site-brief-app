@@ -10,11 +10,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "This verification link has expired." }, { status: 400 });
   }
 
-  await prisma.user.update({
-    where: { id: record.userId },
-    data: { emailVerified: new Date() },
+  // Claim the token and verify the user in one transaction: if two requests race on
+  // the same token (double-click, link prefetch, a retried request), the loser's
+  // deleteMany affects zero rows, and Postgres read-committed guarantees that by then
+  // the winner's transaction — delete and user update together — has already committed.
+  await prisma.$transaction(async (tx) => {
+    const deleted = await tx.verificationToken.deleteMany({ where: { token } });
+    if (deleted.count === 0) return;
+    await tx.user.update({ where: { id: record.userId }, data: { emailVerified: new Date() } });
   });
-  await prisma.verificationToken.delete({ where: { token } });
 
   return NextResponse.json({ ok: true });
 }
