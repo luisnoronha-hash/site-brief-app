@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { buildObjectKey, getUploadUrl, isStorageConfigured } from "@/lib/s3";
+import { buildObjectKey, getUploadUrl, isStorageConfigured } from "@/lib/storage";
 
 const ALLOWED_PREFIXES = ["headshots", "logos", "order-uploads"] as const;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "application/pdf"];

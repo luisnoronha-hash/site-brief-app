@@ -106,6 +106,19 @@ if (direct.name !== pooled.name) {
 run("prisma migrate deploy", "npx", ["prisma", "migrate", "deploy"], direct.value);
 run("seed defaults", "npx", ["tsx", "prisma/seed.ts"], direct.value);
 
+// Storage is optional to deploy but not optional to deliver a report, and its
+// absence is otherwise invisible until an agent tries to upload a headshot.
+if (process.env.BLOB_READ_WRITE_TOKEN) {
+  process.stdout.write("\nObject storage: Vercel Blob.\n");
+} else if (process.env.S3_BUCKET && process.env.S3_ACCESS_KEY_ID) {
+  process.stdout.write("\nObject storage: S3-compatible bucket.\n");
+} else {
+  process.stdout.write(
+    "\n⚠ No object storage configured — headshot/logo uploads and report delivery\n" +
+      "  will be unavailable. Set BLOB_READ_WRITE_TOKEN or the S3_* variables.\n"
+  );
+}
+
 const missing = ["NEXTAUTH_SECRET", "NEXTAUTH_URL"].filter((key) => !process.env[key]);
 if (missing.length > 0) {
   process.stdout.write(

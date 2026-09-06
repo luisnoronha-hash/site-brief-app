@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { getDownloadUrl } from "@/lib/s3";
+import { getDownloadUrl } from "@/lib/storage";
 import {
   formatCents,
   formatDollars,

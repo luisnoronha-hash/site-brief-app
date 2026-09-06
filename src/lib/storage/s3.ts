@@ -5,17 +5,11 @@ import {
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { randomUUID } from "crypto";
 
 const bucket = process.env.S3_BUCKET ?? "";
 
-/**
- * Whether object storage can actually be reached. Without a bucket and
- * credentials every upload fails deep inside the AWS SDK, and the browser only
- * ever sees "upload failed" — so the person retries forever instead of being
- * told the feature isn't configured yet.
- */
-export function isStorageConfigured(): boolean {
+/** Whether this backend has a bucket and credentials to work with. */
+export function isConfigured(): boolean {
   return Boolean(bucket && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY);
 }
 
@@ -30,11 +24,6 @@ export const s3Client = new S3Client({
       }
     : undefined,
 });
-
-export function buildObjectKey(prefix: string, filename: string) {
-  const safeName = filename.replace(/[^a-zA-Z0-9._-]/g, "_");
-  return `${prefix}/${randomUUID()}-${safeName}`;
-}
 
 /** Signed PUT URL so the browser uploads directly to the bucket; the raw key never reaches the client except as this one-time URL. */
 export async function getUploadUrl(key: string, contentType: string, expiresInSeconds = 300) {
