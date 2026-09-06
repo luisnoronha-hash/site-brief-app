@@ -46,7 +46,14 @@ export function FileUpload({
           body: JSON.stringify({ filename: file.name, contentType: file.type, prefix }),
         });
         if (!signRes.ok) {
-          setError("Could not prepare upload. Please try again.");
+          // Surface the server's reason when it has one: "storage isn't set up"
+          // is not something retrying will fix.
+          const body = await signRes.json().catch(() => null);
+          setError(
+            typeof body?.error === "string"
+              ? body.error
+              : "Could not prepare upload. Please try again."
+          );
           continue;
         }
         const { key, uploadUrl } = await signRes.json();

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { buildObjectKey, getUploadUrl } from "@/lib/s3";
+import { buildObjectKey, getUploadUrl, isStorageConfigured } from "@/lib/s3";
 
 const ALLOWED_PREFIXES = ["headshots", "logos", "order-uploads"] as const;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "application/pdf"];
@@ -11,6 +11,19 @@ export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!isStorageConfigured()) {
+    // 503, not 500: the request is fine, the capability is missing. Say so
+    // plainly rather than letting the AWS SDK fail and reading as a glitch.
+    return NextResponse.json(
+      {
+        error:
+          "File uploads aren't available yet — this site's storage hasn't been set up. " +
+          "You can finish everything else and add images later.",
+      },
+      { status: 503 }
+    );
   }
 
   const { filename, contentType, prefix } = await req.json();
