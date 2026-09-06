@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { appUrl } from "@/lib/app-url";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -18,7 +19,7 @@ export async function POST() {
   const portalSession = await stripe.billingPortal.sessions.create({
     customer: subscription.stripeCustomerId,
     configuration,
-    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing`,
+    return_url: `${appUrl()}/dashboard/billing`,
   });
 
   return NextResponse.json({ url: portalSession.url });

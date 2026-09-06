@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { appUrl } from "@/lib/app-url";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -33,8 +34,8 @@ export async function POST() {
     line_items: [{ price: process.env.STRIPE_PRICE_SUBSCRIPTION, quantity: 1 }],
     metadata: { userId: user.id },
     subscription_data: { metadata: { userId: user.id } },
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing?checkout=success`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing?checkout=cancelled`,
+    success_url: `${appUrl()}/dashboard/billing?checkout=success`,
+    cancel_url: `${appUrl()}/dashboard/billing?checkout=cancelled`,
   });
 
   return NextResponse.json({ checkoutUrl: checkoutSession.url });

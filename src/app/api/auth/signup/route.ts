@@ -3,8 +3,9 @@ import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { signupSchema } from "@/lib/validations";
-import { sendEmail } from "@/lib/email";
+import { isEmailConfigured, sendEmail } from "@/lib/email";
 import { verificationEmail } from "@/lib/email-templates";
+import { appUrl } from "@/lib/app-url";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -35,6 +36,14 @@ export async function POST(req: Request) {
 
   const { subject, body: html } = verificationEmail(user.locale, token);
   await sendEmail(user.email, subject, html);
+
+  // Without a mail provider the confirmation link is never delivered, which
+  // leaves a brand-new account permanently unable to sign in. Hand the link
+  // back so the signup still completes; once RESEND_API_KEY is set this branch
+  // stops firing and the link only ever travels by email.
+  if (!isEmailConfigured()) {
+    return NextResponse.json({ ok: true, verifyUrl: `${appUrl()}/verify?token=${token}` });
+  }
 
   return NextResponse.json({ ok: true });
 }

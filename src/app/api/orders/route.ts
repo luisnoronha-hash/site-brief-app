@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { appUrl } from "@/lib/app-url";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -95,8 +96,8 @@ export async function POST(req: Request) {
         },
       ],
       metadata: { orderId: order.id, userId: user.id },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/orders/${order.id}?checkout=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/new?checkout=cancelled`,
+      success_url: `${appUrl()}/dashboard/orders/${order.id}?checkout=success`,
+      cancel_url: `${appUrl()}/dashboard/new?checkout=cancelled`,
     });
 
     await prisma.order.update({
