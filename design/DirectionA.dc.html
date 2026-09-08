@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <style>
+    body { margin: 0; background: #F3F4F3; }
+    a { color: #E2571E; } a:hover { color: #B23F12; }
+  </style>
+</helmet>
+
+<div style="width: 880px; min-height: 1160px; background: #F3F4F3; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; color: #0F1317; box-sizing: border-box; padding: 56px 56px 64px;">
+
+  <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 44px;">
+    <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #E2571E;">Direction A</div>
+    <div style="font-size: 40px; font-weight: 700; letter-spacing: -0.02em;">Survey</div>
+    <div style="font-size: 15px; line-height: 1.5; color: #565E68; max-width: 620px;">The instrument, not the property. Borrows from survey plats and control markers — the visual language of measurement rather than of selling houses.</div>
+  </div>
+
+  <!-- Logomark + wordmark -->
+  <div style="background: #FFFFFF; border: 1px solid #DDE0DE; padding: 40px; margin-bottom: 20px;">
+    <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8A9199; margin-bottom: 28px;">Mark + wordmark</div>
+    <div style="display: flex; align-items: center; gap: 40px; flex-wrap: wrap;">
+
+      <svg width="76" height="76" viewBox="0 0 76 76" fill="none" aria-hidden="true">
+        <circle cx="38" cy="38" r="36" stroke="#0F1317" stroke-width="2.5"/>
+        <path d="M38 6 V70 M6 38 H70" stroke="#0F1317" stroke-width="2.5"/>
+        <path d="M38 20 A18 18 0 0 1 56 38 Z" fill="#E2571E"/>
+      </svg>
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 30px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; line-height: 1;">Site Brief</div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.20em; text-transform: uppercase; color: #565E68;">Development Potential</div>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 28px; margin-top: 36px; padding-top: 28px; border-top: 1px solid #EDEFEE;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="22" height="22" viewBox="0 0 76 76" fill="none" aria-hidden="true">
+          <circle cx="38" cy="38" r="34" stroke="#0F1317" stroke-width="5"/>
+          <path d="M38 4 V72 M4 38 H72" stroke="#0F1317" stroke-width="5"/>
+        </svg>
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase;">Site Brief</span>
+      </div>
+      <span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8A9199;">at 22px — the footer signature</span>
+    </div>
+  </div>
+
+  <!-- Palette -->
+  <div style="background: #FFFFFF; border: 1px solid #DDE0DE; padding: 40px; margin-bottom: 20px;">
+    <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8A9199; margin-bottom: 24px;">Palette</div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="height: 92px; background: #0F1317;"></div>
+        <div style="font-size: 13px; font-weight: 500;">Ink</div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #565E68;">#0F1317</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="height: 92px; background: #565E68;"></div>
+        <div style="font-size: 13px; font-weight: 500;">Graphite</div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #565E68;">#565E68</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="height: 92px; background: #E2571E;"></div>
+        <div style="font-size: 13px; font-weight: 500;">Signal</div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #565E68;">#E2571E</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="height: 92px; background: #F3F4F3; border: 1px solid #DDE0DE; box-sizing: border-box;"></div>
+        <div style="font-size: 13px; font-weight: 500;">Paper</div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #565E68;">#F3F4F3</div>
+      </div>
+    </div>
+    <div style="margin-top: 20px; font-size: 13px; line-height: 1.55; color: #565E68;">One accent only. Signal orange is used for a single element per view — never a background, never two things at once.</div>
+  </div>
+
+  <!-- Type -->
+  <div style="background: #FFFFFF; border: 1px solid #DDE0DE; padding: 40px; margin-bottom: 20px;">
+    <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8A9199; margin-bottom: 24px;">Type</div>
+    <div style="display: flex; flex-direction: column; gap: 22px;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8A9199;">Space Grotesk · 700 · headings</div>
+        <div style="font-size: 34px; font-weight: 700; letter-spacing: -0.02em;">12 units by right</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8A9199;">Space Grotesk · 400 · body</div>
+        <div style="font-size: 15px; line-height: 1.6; max-width: 620px;">T4-L zoning permits 36 units per acre. The lot carries 14,850 square feet, so twelve dwelling units are available without a variance.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8A9199;">IBM Plex Mono · figures and labels</div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 17px;">$70,833 / door · 14,850 SF · FOLIO 30-4012-018</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application -->
+  <div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px;">
+
+    <div style="background: #FFFFFF; border: 1px solid #DDE0DE; padding: 24px;">
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8A9199; margin-bottom: 18px;">Report cover</div>
+      <div style="background: #FFFFFF; border: 1px solid #DDE0DE; aspect-ratio: 8.5 / 11; padding: 22px; display: flex; flex-direction: column; box-sizing: border-box;">
+        <div style="height: 5px; background: #0F1317; margin: -22px -22px 26px;"></div>
+        <div style="width: 74px; height: 20px; background: #E9EBE9; margin-bottom: 44px;"></div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: #565E68; margin-bottom: 8px;">Development Potential</div>
+        <div style="font-size: 17px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">2847 SW 27th Avenue</div>
+        <div style="height: 1px; background: #DDE0DE; margin: 14px 0;"></div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 8px; color: #8A9199;">Prepared September 6, 2026</div>
+        <div style="flex-grow: 1;"></div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 30px; height: 30px; background: #E9EBE9;"></div>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <div style="font-size: 9px; font-weight: 700;">Marina Category</div>
+            <div style="font-size: 7px; color: #8A9199;">Coastline Properties Group</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 5px; margin-top: 16px; padding-top: 10px; border-top: 1px solid #EDEFEE;">
+          <svg width="9" height="9" viewBox="0 0 76 76" fill="none" aria-hidden="true">
+            <circle cx="38" cy="38" r="32" stroke="#8A9199" stroke-width="8"/>
+            <path d="M38 4 V72 M4 38 H72" stroke="#8A9199" stroke-width="8"/>
+          </svg>
+          <span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 6.5px; letter-spacing: 0.10em; text-transform: uppercase; color: #8A9199;">Analysis by Site Brief</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #DDE0DE; padding: 24px; display: flex; flex-direction: column; gap: 22px;">
+      <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8A9199;">Interface</div>
+
+      <div style="border: 1px solid #DDE0DE; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #E2571E;">In progress</div>
+        <div style="font-size: 17px; font-weight: 700; letter-spacing: -0.01em;">2847 SW 27th Avenue</div>
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #565E68;">Ordered Sep 6 · due Sep 8</div>
+      </div>
+
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <div style="background: #0F1317; color: #F3F4F3; padding: 13px 26px; font-size: 13px; font-weight: 500; letter-spacing: 0.04em;">Order an analysis</div>
+        <div style="border: 1px solid #0F1317; color: #0F1317; padding: 13px 26px; font-size: 13px; font-weight: 500; letter-spacing: 0.04em;">View report</div>
+      </div>
+
+      <div style="font-size: 13px; line-height: 1.55; color: #565E68;">Square corners, hairline rules, monospaced figures. Reads as an instrument that measures rather than a brand that sells.</div>
+
+      <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid #EDEFEE; font-size: 13px; line-height: 1.55; color: #565E68;"><span style="color: #0F1317; font-weight: 500;">Tradeoff:</span> cold. An agent who wants their listing presentation to feel warm and premium may find it clinical.</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

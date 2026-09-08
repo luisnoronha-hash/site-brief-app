@@ -1,0 +1,12 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 1080, "title": "Compare — three directions" },
+    { "file": "DirectionA.dc.html", "x": 0, "y": 1220, "w": 880, "h": 1160, "title": "A · Survey" },
+    { "file": "DirectionB.dc.html", "x": 960, "y": 1220, "w": 880, "h": 1160, "title": "B · Parcel" },
+    { "file": "DirectionC.dc.html", "x": 1920, "y": 1220, "w": 880, "h": 1160, "title": "C · Index" }
+  ],
+  "annotations": [
+    { "id": "footer-test", "x": 1520, "y": 300, "w": 260, "text": "The footer test is the real decision.\n\nSite Brief signs a document the agent owns. Whichever mark you stop noticing there is the right one." }
+  ],
+  "launch": { "view": "canvas" }
+}

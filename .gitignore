@@ -37,3 +37,8 @@ next-env.d.ts
 # prisma
 /prisma/dev.db
 /prisma/dev.db-journal
+
+# Seeded design canvases: build output (~2.5MB of embedded editor).
+# The .dc.html artboards and canvas.json beside them are the source.
+design/*.html
+!design/*.dc.html
