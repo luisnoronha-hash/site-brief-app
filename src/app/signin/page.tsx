@@ -34,7 +34,7 @@ export default function SignInPage() {
         setError("Incorrect email or password.");
         return;
       }
-      router.push("/dashboard");
+      router.push("/after-signin");
       router.refresh();
     } finally {
       setLoading(false);
@@ -71,7 +71,7 @@ export default function SignInPage() {
           <h1 className="font-serif text-2xl text-navy">Sign in</h1>
 
           <button
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            onClick={() => signIn("google", { callbackUrl: "/after-signin" })}
             className="btn-secondary mt-8 w-full"
             type="button"
           >
