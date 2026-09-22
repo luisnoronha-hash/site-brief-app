@@ -1,5 +1,6 @@
 import { requireAgent } from "@/lib/session";
 import { ProfileForm } from "@/components/ProfileForm";
+import { ChangePasswordForm } from "@/components/ChangePasswordForm";
 
 export default async function ProfilePage() {
   const user = await requireAgent();
@@ -24,6 +25,12 @@ export default async function ProfilePage() {
             logoKey: p?.logoKey ?? null,
           }}
         />
+      </div>
+
+      <h2 className="mt-14 font-serif text-2xl text-navy">Password</h2>
+      <p className="mt-1 text-sm text-graystone">Signed in as {user.email}.</p>
+      <div className="mt-8">
+        <ChangePasswordForm hasPassword={Boolean(user.passwordHash)} />
       </div>
     </div>
   );

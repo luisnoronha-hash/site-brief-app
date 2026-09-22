@@ -1,7 +1,10 @@
 import { getAllSettings, SETTING_KEYS } from "@/lib/settings";
 import { SettingsForm } from "@/components/SettingsForm";
+import { ChangePasswordForm } from "@/components/ChangePasswordForm";
+import { requireAdmin } from "@/lib/session";
 
 export default async function AdminSettingsPage() {
+  const admin = await requireAdmin();
   const settings = await getAllSettings();
 
   return (
@@ -19,6 +22,12 @@ export default async function AdminSettingsPage() {
             rushSurchargeCents: settings[SETTING_KEYS.rushSurchargeCents],
           }}
         />
+      </div>
+
+      <h2 className="mt-14 font-serif text-2xl text-navy">Your account</h2>
+      <p className="mt-1 text-sm text-graystone">Signed in as {admin.email}.</p>
+      <div className="mt-8">
+        <ChangePasswordForm hasPassword={Boolean(admin.passwordHash)} />
       </div>
     </div>
   );
